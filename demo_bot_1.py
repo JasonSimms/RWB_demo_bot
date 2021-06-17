@@ -8,7 +8,7 @@ yf.pdr_override()
 
 stock=input("Enter a ticker symbol:  ")
 
-startyear=2019
+startyear=2021
 startmonth=1
 startday=1
 
@@ -91,3 +91,55 @@ for i in df.index:
     num+=1
 
 print(percentChange)
+
+gains=0
+ng=0
+losses=0
+nl=0
+totalR=1
+avgLoss=0
+
+for i in percentChange:
+    if(i>0):
+        gains+=i
+        ng+=1
+    else:
+        losses+=i
+        nl+=1
+    totalR=totalR*((i/100)+1)
+
+totalR=round((totalR-1)*100,2)
+
+if(ng>0):
+    avgGain=gains/ng
+    maxR=str(max(percentChange))
+else:
+    avgGain=0
+    maxR="undefined"
+
+if(nl>0):
+    avgGain=losses/nl
+    maxL=str(min(percentChange))
+    ratio=str(-avgGain/avgLoss)
+else:
+    avgLoss=0
+    maxL="undefined"
+    ratio="inf"
+
+if(ng>0 or nl>0):
+    battingAvg=ng/(ng+nl)
+else:
+    battingAvg=0
+
+
+print()
+print("Results for "+ stock + "Start: "+str(df.index[0])+", Sample Size: "+str(ng+nl)+"trades")
+print("EMAs used "+str(emasUsed))
+print("Batting Avg: "+str(battingAvg))
+print("Gain/Loss Ratio: "+ ratio)
+print("Average Gain: "+str(avgGain))
+print("Average Loss: "+str(avgLoss))
+print("Max Return: "+maxR)
+print("Max Loss: "+maxL)
+print("Total Return over "+str(ng+nl)+" trades: "+ str(totalR)+"%")
+print()
